@@ -1,0 +1,80 @@
+# Multistream A-share daily Craft v1 (Top Adapter)
+data:
+  stock_dir: "./data/stocks"
+  indices_dir: "./data/indices"
+  merged_indices_path: "./data/processed/merged_indices.csv"
+  stock_date_col: "trade_date"
+  index_date_col: "date"
+  feature_cols: ["open", "high", "low", "close", "vol", "amount"]
+  lookback: 40
+  horizon: 12
+  max_context: 512
+  clip: 5.0
+  train_ratio: 0.9
+  val_ratio: 0.1
+  test_ratio: 0.0
+
+training:
+  mixed_precision: "bf16"
+  basemodel_epochs: 20
+  batch_size: 128
+  num_workers: 6
+  log_interval: 500
+  seed: 42
+  predictor_learning_rate: 0.00004
+  accumulation_steps: 1
+  use_sampled_s1_for_s2: true
+  cache_tokenized_sequences: true
+  token_cache_batch_size: 256
+  token_cache_num_workers: 0
+  optimizer:
+    name: "adamw"
+    lr: 0.00004
+    beta1: 0.9
+    beta2: 0.95
+    weight_decay: 0.1
+  scheduler:
+    name: "onecycle"
+    pct_start: 0.03
+    div_factor: 10.0
+
+model_paths:
+  exp_name: "a_share_multistream_daily_v8"
+  base_path: "./finetuned"
+  base_save_path: ""
+  finetuned_tokenizer: ""
+  tokenizer_save_name: "tokenizer"
+  basemodel_save_name: "multistream_basemodel"
+
+model:
+  pretrained_tokenizer_path: "../Kronos_old/assets/Kronos-Tokenizer-base"
+  pretrained_predictor_path: "../Kronos_old/assets/Kronos-base"
+  hidden_dim: null
+  lag_window: 5
+  alpha: 0.0
+  freeze_stock_tokenizer: true
+  freeze_index_tokenizer: true
+  index_ids: []
+  num_indices: 0
+  no_early_pooling: true
+
+experiment:
+  name: "craft_multistream_a_share_daily"
+  description: "A-share daily multistream Craft v1 with stock<-indices top adapter"
+  use_comet: false
+  train_tokenizer: false
+  train_basemodel: true
+  skip_existing: false
+  pre_trained_tokenizer: true
+  pre_trained_predictor: true
+
+device:
+  use_cuda: true
+  device_id: 0
+
+inference:
+  T: 1.0
+  top_k: 0
+  top_p: 0.9
+  sample_count: 1
+  output_index_aux: false

@@ -591,6 +591,7 @@ def save_checkpoint_bundle(
                 "feature_cols": config.feature_cols,
                 "lookback": config.lookback,
                 "horizon": config.horizon,
+                "sample_stride": config.sample_stride,
                 "lag_window": config.lag_window,
                 "alpha": config.alpha,
                 "use_sampled_s1_for_s2": config.use_sampled_s1_for_s2,
@@ -1436,6 +1437,7 @@ def main():
     logger.info(f"Merged indices path: {config.merged_indices_path}")
     logger.info(f"Lookback: {config.lookback}")
     logger.info(f"Horizon: {config.horizon}")
+    logger.info(f"Sample stride: {config.sample_stride}")
     logger.info(f"Batch size: {config.batch_size}")
     logger.info(f"Predictor LR: {config.predictor_learning_rate}")
     logger.info(f"Mixed precision: {config.mixed_precision}")

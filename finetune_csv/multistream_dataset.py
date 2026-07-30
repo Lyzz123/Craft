@@ -189,6 +189,7 @@ class MultiStreamStockDataset(Dataset):
         train_ratio: float = 0.9,
         val_ratio: float = 0.1,
         test_ratio: float = 0.0,
+        sample_stride: int = 5,
     ):
         if split not in {"train", "val", "test"}:
             raise ValueError("split must be one of {'train', 'val', 'test'}")
@@ -198,6 +199,9 @@ class MultiStreamStockDataset(Dataset):
         self.lookback = lookback
         self.horizon = horizon
         self.window = lookback + horizon + 1
+        self.sample_stride = int(sample_stride)
+        if self.sample_stride < 1:
+            raise ValueError("sample_stride must be at least 1")
         self.clip = clip
         self.stock_date_col = stock_date_col
         self.index_date_col = index_date_col
@@ -299,7 +303,7 @@ class MultiStreamStockDataset(Dataset):
                 continue
 
             local_samples = 0
-            for local_start in range(0, segment_len - self.window + 1):
+            for local_start in range(0, segment_len - self.window + 1, self.sample_stride):
                 self.samples.append((series_idx, split_start + local_start))
                 local_samples += 1
             if local_samples > 0:
@@ -325,6 +329,7 @@ class MultiStreamStockDataset(Dataset):
             f"aligned_series={self.diagnostics['aligned_series']}, "
             f"contributing_series={self.diagnostics['contributing_series']}, "
             f"window={self.window}, "
+            f"sample_stride={self.sample_stride}, "
             f"skipped_short_common_dates={len(self.diagnostics['skipped_short_common_dates'])} "
             f"({ _format_examples(self.diagnostics['skipped_short_common_dates']) }), "
             f"skipped_short_split={len(self.diagnostics['skipped_short_split'])} "
@@ -517,6 +522,7 @@ def create_multistream_dataloaders(config) -> Tuple[DataLoader, DataLoader, Mult
         split="train",
         lookback=config.lookback,
         horizon=config.horizon,
+        sample_stride=config.sample_stride,
         clip=config.clip,
         stock_date_col=config.stock_date_col,
         index_date_col=config.index_date_col,
@@ -532,6 +538,7 @@ def create_multistream_dataloaders(config) -> Tuple[DataLoader, DataLoader, Mult
         split="val",
         lookback=config.lookback,
         horizon=config.horizon,
+        sample_stride=config.sample_stride,
         clip=config.clip,
         stock_date_col=config.stock_date_col,
         index_date_col=config.index_date_col,

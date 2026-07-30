@@ -117,7 +117,7 @@ def test_multistream_dataset_shapes_and_context_only_normalization(tmp_path: Pat
     indices_dir.mkdir()
     stocks_dir.mkdir()
 
-    dates = pd.date_range("2024-02-01", periods=8, freq="D")
+    dates = pd.date_range("2024-02-01", periods=12, freq="D")
     _write_index_csv(indices_dir / "idx_1.csv", index_id="000300.SH", name="CSI300", dates=dates, base_value=1.0)
     _write_index_csv(indices_dir / "idx_2.csv", index_id="000905.SH", name="CSI500", dates=dates, base_value=5.0)
     merged_csv = tmp_path / "merged_indices.csv"
@@ -139,6 +139,9 @@ def test_multistream_dataset_shapes_and_context_only_normalization(tmp_path: Pat
         val_ratio=0.0,
         test_ratio=0.0,
     )
+
+    assert dataset.sample_stride == 5
+    assert dataset.samples == [(0, 0), (0, 5)]
 
     sample = dataset[0]
     assert sample["stock_seq"].shape == (6, 6)

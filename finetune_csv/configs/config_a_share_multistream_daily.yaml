@@ -8,6 +8,7 @@ data:
   feature_cols: ["open", "high", "low", "close", "vol", "amount"]
   lookback: 40
   horizon: 12
+  sample_stride: 5
   max_context: 512
   clip: 5.0
   train_ratio: 0.9

@@ -140,8 +140,8 @@ def test_multistream_dataset_shapes_and_context_only_normalization(tmp_path: Pat
         test_ratio=0.0,
     )
 
-    assert dataset.sample_stride == 5
-    assert dataset.samples == [(0, 0), (0, 5)]
+    assert dataset.sample_stride == 1
+    assert dataset.samples == [(0, start) for start in range(7)]
 
     sample = dataset[0]
     assert sample["stock_seq"].shape == (6, 6)

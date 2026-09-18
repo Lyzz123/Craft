@@ -189,7 +189,7 @@ class MultiStreamStockDataset(Dataset):
         train_ratio: float = 0.9,
         val_ratio: float = 0.1,
         test_ratio: float = 0.0,
-        sample_stride: int = 5,
+        sample_stride: int = 1,
     ):
         if split not in {"train", "val", "test"}:
             raise ValueError("split must be one of {'train', 'val', 'test'}")

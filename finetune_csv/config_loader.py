@@ -160,7 +160,7 @@ class CustomFinetuneConfig:
         self.predict_window = data_config.get("predict_window", data_config.get("horizon", 48))
         self.lookback = self.lookback_window
         self.horizon = self.predict_window
-        self.sample_stride = int(data_config.get("sample_stride", 5))
+        self.sample_stride = int(data_config.get("sample_stride", 1))
         self.max_context = data_config.get("max_context", self.lookback_window)
         self.clip = data_config.get("clip", 5.0)
         self.train_ratio = data_config.get("train_ratio", 0.9)
